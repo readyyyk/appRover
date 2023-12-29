@@ -1,0 +1,17 @@
+import { z } from 'zod';
+
+import { UuidSchema } from '@/types/uuid';
+
+export const UserSchema = z.object({
+    id: UuidSchema,
+    username: z.string(),
+    firstname: z.string(),
+    lastname: z.string(),
+    password: z.string(),
+    image: z.string().url(),
+});
+
+export const UserDataSchema = UserSchema.omit({ password: true });
+
+export type IUser = z.infer<typeof UserSchema>;
+export type IUserData = z.infer<typeof UserDataSchema>;
