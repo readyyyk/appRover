@@ -1,6 +1,7 @@
-import { IUser } from '@/types/IUser';
+import { IFile } from '@/types/file';
 import { IGroup } from '@/types/group';
 import { IPollWithOwner } from '@/types/poll';
+import { IUser } from '@/types/user';
 
 export const polls: IPollWithOwner[] = [
     {
@@ -149,5 +150,38 @@ export const groups: IGroup[] = [
         id: '456e7891-e32b-12d3-a456-426614174000',
         name: 'Group 3',
         logo: 'https://r-randimg-py.fly.dev/picsum/group3',
+    },
+] as const;
+
+export const files: IFile[] = [
+    {
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        createdBy: 'e5e17f91-0095-4d86-99be-76e78dac502d',
+        createdAt: new Date('2022-01-01'),
+        name: 'Environmental Report 2022',
+    },
+    {
+        id: '987e6543-e21b-12d3-a456-426614174000',
+        createdBy: 'dd5cb6dc-d2c4-4421-8de2-1e51369c3f51',
+        createdAt: new Date('2022-02-01'),
+        name: 'Tech Company Financial Statement 2022',
+    },
+    {
+        id: '456e7891-e32b-12d3-a456-426614174000',
+        createdBy: '48a39106-4197-49a8-a8d8-6837d0f23f6e',
+        createdAt: new Date('2022-03-01'),
+        name: 'City Council Meeting Minutes March 2022',
+    },
+    {
+        id: '789e1234-e56b-12d3-a456-426614174000',
+        createdBy: 'e5e17f91-0095-4d86-99be-76e78dac502d',
+        createdAt: new Date('2022-04-01'),
+        name: 'Environmental Impact Assessment April 2022',
+    },
+    {
+        id: '321e9876-e65b-12d3-a456-426614174000',
+        createdBy: 'dd5cb6dc-d2c4-4421-8de2-1e51369c3f51',
+        createdAt: new Date('2022-05-01'),
+        name: 'Tech Company Product Roadmap 2022',
     },
 ] as const;

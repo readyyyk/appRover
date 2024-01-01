@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
-import { IUserData, UserSchema } from '@/types/IUser';
+import { IFile } from '@/types/file';
 import { GroupSchema, IGroup } from '@/types/group';
 import { PollSchema } from '@/types/poll';
+import { IUserData, UserSchema } from '@/types/user';
 import { UuidSchema } from '@/types/uuid';
 
-import { groups, polls, users } from '@/assets/mock';
+import { files, groups, polls, users } from '@/assets/mock';
 import { publicProcedure, router } from '@/server/trpc';
 
 // for authed-only routes manually passing accessToken for simplicity
@@ -41,6 +42,11 @@ export const appRouter = router({
         .input(z.object({ accessToken: z.string() }))
         .query(async ({ input }) => {
             return groups.filter((el) => true) as IGroup[];
+        }),
+    getMyFiles: publicProcedure
+        .input(z.object({ accessToken: z.string() }))
+        .query(async ({ input }) => {
+            return files.filter((a) => true) as IFile[];
         }),
 });
 export type AppRouter = typeof appRouter;

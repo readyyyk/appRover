@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import { UuidSchema } from '@/types/uuid';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 
 import { serverTrpc } from '@/app/_trpc/serverClient';
@@ -28,7 +28,7 @@ const Page: FC<Props> = async ({ params: { pollId } }) => {
     return (
         <Card
             className={cn(
-                'max-w-[95dvw] md:max-w-4xl shadow shadow-secondary flex-1',
+                'max-w-[95dvw] md:max-w-4xl shadow shadow-secondary flex-1 bg-slate-900',
                 data.state === 'frozen' && 'shadow shadow-blue-500',
             )}
         >

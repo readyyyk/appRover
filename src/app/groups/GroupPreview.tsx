@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 import { IGroup } from '@/types/group';
 
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 
 import { cn } from '@/lib/utils';
 
@@ -14,7 +14,7 @@ export const GroupPreviewContainer: FC<{
 }> = ({ children, className }) => (
     <Card
         className={cn(
-            'aspect-square w-52 bg-secondary rounded-xl h-full shadow-lg hover:shadow-secondary transition-all',
+            'h-24 max-w-sm bg-secondary rounded-xl shadow-lg hover:shadow-secondary transition-all',
             className,
         )}
     >
@@ -23,19 +23,19 @@ export const GroupPreviewContainer: FC<{
 );
 
 interface Props extends IGroup {}
-const GroupPreview: FC<Props> = ({ id, name, logo }) => {
+const GroupPreview: FC<Props> = ({ name, logo }) => {
     return (
         <GroupPreviewContainer>
-            <CardHeader className={'text-center gap-6'}>
-                <CardTitle className={'break-words'}>{name}</CardTitle>
+            <div className={'flex h-full items-center p-4 gap-4'}>
                 <Image
                     src={logo}
                     alt={name}
-                    width={128}
-                    height={128}
-                    className={'w-full h-full object-cover rounded-full'}
+                    width={64}
+                    height={64}
+                    className="object-cover rounded-full w-[64px] h-[64px]"
                 />
-            </CardHeader>
+                <h1 className={'text-xl font-semibold'}>{name}</h1>
+            </div>
         </GroupPreviewContainer>
     );
 };

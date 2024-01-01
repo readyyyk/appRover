@@ -11,9 +11,9 @@ interface Props {}
 const Page: FC<Props> = async ({}) => {
     const groups = await serverTrpc.getGroupList({ accessToken: '' });
     return (
-        <div className="flex-1 max-w-6xl w-[95dvw] flex flex-wrap gap-12 justify-center">
+        <div className="flex-1 max-w-6xl w-[95dvw] flex flex-wrap gap-6 justify-center">
             <Link href={'groups/new'}>
-                <GroupPreviewContainer className="bg-green-200 hover:bg-green-500 dark:bg-green-700 dark:hover:bg-green-500 transition-all grid place-content-center">
+                <GroupPreviewContainer className="aspect-video bg-green-200 hover:bg-green-500 dark:bg-green-700 dark:hover:bg-green-500 transition-all grid place-content-center">
                     <PlusIcon className={'w-16 h-16'} />
                 </GroupPreviewContainer>
             </Link>

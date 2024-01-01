@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 interface Props {}
 
 const Page: FC<Props> = async ({}) => {
-    redirect('/dashboard');
+    redirect('/polls');
 };
 
 export default Page;

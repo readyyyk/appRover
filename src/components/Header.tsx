@@ -1,14 +1,6 @@
 import { FC, ReactNode } from 'react';
 
-import {
-    FileIcon,
-    FilesIcon,
-    HomeIcon,
-    Link2Icon,
-    LinkIcon,
-    UserIcon,
-    UsersIcon,
-} from 'lucide-react';
+import { FileIcon, HomeIcon, UserIcon, UsersIcon } from 'lucide-react';
 import Link from 'next/link';
 
 interface HeaderLinkProps {
@@ -42,9 +34,6 @@ const Header: FC<Props> = ({}) => {
                 </HeaderLink>
                 <HeaderLink href={'/files'}>
                     <FileIcon />
-                </HeaderLink>
-                <HeaderLink href={'/invites'}>
-                    <LinkIcon />
                 </HeaderLink>
             </div>
 

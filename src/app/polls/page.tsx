@@ -2,13 +2,11 @@
 
 import { useState } from 'react';
 
-import { Loader, Loader2 } from 'lucide-react';
-import { notFound } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
-import { IPollState, IPollWithOwner } from '@/types/poll';
+import { IPollState } from '@/types/poll';
 
 import { trpc } from '@/app/_trpc/trpc';
-import { polls } from '@/assets/mock';
 import CenterLayout from '@/components/CenterLayout';
 
 import PollPreview from './PollPreview';

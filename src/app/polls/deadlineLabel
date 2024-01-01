@@ -1,3 +1,12 @@
+const handleDeadlineSearchUpdate = (a: boolean, newDate: string) => {
+    const parsedDate = new Date(newDate.replace('T', ' ')); //111111-11-11T11:01
+    setDeadlineSearchValues((prevState) => {
+        const newState = [...prevState] as [Date, Date];
+        newState[a ? 0 : 1] = parsedDate;
+        return newState;
+    });
+};
+
 <Separator className={'my-3'} />
 
 <div>

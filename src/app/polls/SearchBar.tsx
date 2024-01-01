@@ -2,8 +2,10 @@ import { Dispatch, FC, SetStateAction } from 'react';
 
 import {
     FilterIcon,
+    PlusIcon,
     /*, SearchIcon*/
 } from 'lucide-react';
+import Link from 'next/link';
 
 import { AllPollStates, IPollState } from '@/types/poll';
 
@@ -30,26 +32,22 @@ interface Props {
 
 const SearchBar: FC<Props> = ({
     stateSearch: [searchValue, setSearchValue],
-    stateDeadline: [deadlineSearchValues, setDeadlineSearchValues],
+    stateDeadline: [_, setDeadlineSearchValues],
     stateAvailableStates: [selectedStates, setSelectedStates],
     stateOwnerSearchValue: [ownerSearchValue, setOwnerSearchValue],
 }) => {
-    const handleDeadlineSearchUpdate = (a: boolean, newDate: string) => {
-        const parsedDate = new Date(newDate.replace('T', ' ')); //111111-11-11T11:01
-        setDeadlineSearchValues((prevState) => {
-            const newState = [...prevState] as [Date, Date];
-            newState[a ? 0 : 1] = parsedDate;
-            return newState;
-        });
-    };
-
     return (
-        <div
-            className={
-                'w-full sticky top-0 pt-10 z-50 bg-gradient-to-t from-transparent to-15% to-background pb-6'
-            }
-        >
-            <div className={'flex gap-3 w-[90%]  m-auto'}>
+        <div className="w-full sticky top-0 pt-10 z-50 bg-gradient-to-t from-transparent to-15% to-background pb-6">
+            <div className={'flex gap-3 '}>
+                <Button
+                    asChild
+                    variant={'success'}
+                    className="h-auto me-4 text-lg flex gap-1"
+                >
+                    <Link href={'/polls/new'}>
+                        <span>Create new</span> <PlusIcon />
+                    </Link>
+                </Button>
                 <Input
                     type="search"
                     placeholder="Search..."
