@@ -1,15 +1,54 @@
-import { z } from 'zod';
+import { ZodSchema, z } from 'zod';
 
+import { TokensSchema } from '@/types/auth';
 import { IFile } from '@/types/file';
 import { GroupSchema, IGroup } from '@/types/group';
 import { PollSchema } from '@/types/poll';
-import { IUserData, UserSchema } from '@/types/user';
+import { IApiResponse } from '@/types/response';
+import {
+    type IUserData,
+    UserCreateSchema,
+    UserDataSchema,
+    UserLoginSchema,
+    UserSchema,
+} from '@/types/user';
 import { UuidSchema } from '@/types/uuid';
 
 import { files, groups, polls, users } from '@/assets/mock';
 import { publicProcedure, router } from '@/server/trpc';
 
-// for authed-only routes manually passing accessToken for simplicity
+function withWrapped<T extends ZodSchema<any>>(
+    route: string,
+    schema: T,
+    fetchOptions?: RequestInit,
+): Promise<IApiResponse<z.infer<T>>> {
+    return new Promise(async (resolve) => {
+        try {
+            const resp = await fetch(
+                process.env.BACKEND_URL + route,
+                fetchOptions,
+            );
+            if (resp.ok) {
+                resolve({
+                    success: true,
+                    data: schema.parse(await resp.json()),
+                });
+            } else {
+                resolve({
+                    success: false,
+                    message: JSON.stringify(await resp.json()),
+                });
+            }
+        } catch (e) {
+            console.error(e);
+            resolve({
+                success: false,
+                message: JSON.stringify(e),
+            });
+        }
+    });
+}
+
 export const appRouter = router({
     getHelloWorld: publicProcedure.query(async () => {
         return 'hello world';
@@ -45,8 +84,37 @@ export const appRouter = router({
         }),
     getMyFiles: publicProcedure
         .input(z.object({ accessToken: z.string() }))
-        .query(async ({ input }) => {
-            return files.filter((a) => true) as IFile[];
+        .query(async ({ input }): Promise<IFile[]> => {
+            return files.filter((a) => true);
         }),
+    auth: router({
+        login: publicProcedure.input(UserLoginSchema).mutation(({ input }) => {
+            return withWrapped('/auth/login', TokensSchema, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(input),
+            });
+        }),
+    }),
+    users: router({
+        create: publicProcedure
+            .input(UserCreateSchema)
+            .mutation(({ input }) => {
+                return withWrapped('/users/create', z.null(), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(input),
+                });
+            }),
+        me: publicProcedure
+            .input(z.string().optional())
+            .query(({ input, ctx }) => {
+                if (input)
+                    return withWrapped('/users/me', UserDataSchema, {
+                        headers: { Authorization: `Bearer ${input}` },
+                    });
+                return withWrapped('/users/me', UserDataSchema);
+            }),
+    }),
 });
 export type AppRouter = typeof appRouter;

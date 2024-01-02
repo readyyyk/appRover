@@ -39,15 +39,14 @@ const SearchBar: FC<Props> = ({
     return (
         <div className="w-full sticky top-0 pt-10 z-50 bg-gradient-to-t from-transparent to-15% to-background pb-6">
             <div className={'flex gap-3 '}>
-                <Button
-                    asChild
-                    variant={'success'}
-                    className="h-auto me-4 text-lg flex gap-1"
-                >
-                    <Link href={'/polls/new'}>
+                <Link href={'/polls/new'}>
+                    <Button
+                        variant={'success'}
+                        className="h-auto me-4 text-lg flex gap-1"
+                    >
                         <span>Create new</span> <PlusIcon />
-                    </Link>
-                </Button>
+                    </Button>
+                </Link>
                 <Input
                     type="search"
                     placeholder="Search..."

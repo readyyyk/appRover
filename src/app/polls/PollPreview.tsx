@@ -44,15 +44,16 @@ const PollPreview: FC<Props> = ({
                     <h3 className={'text-end text-lg pt-2 pe-3'}>
                         {format(deadline, 'dd.MM.yyyy')}
                     </h3>
-                    <Button
+                    <Link
+                        href={'/polls/' + id}
                         className={'w-28 place-self-center'}
-                        variant={state === 'frozen' ? 'default' : 'success'}
-                        asChild
                     >
-                        <Link href={'/poll/' + id}>
+                        <Button
+                            variant={state === 'frozen' ? 'default' : 'success'}
+                        >
                             {state === 'frozen' ? 'Result' : 'Vote'}
-                        </Link>
-                    </Button>
+                        </Button>
+                    </Link>
                     <div className={'w-full p-3 flex items-baseline gap-3'}>
                         <h2 className={'text-md mb-1 text-center'}>
                             Progress:

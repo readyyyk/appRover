@@ -2,14 +2,16 @@
 
 import { FC, useState } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 
+import { trpc } from '@/app/_trpc/trpc';
 import AuthForm from '@/components/AuthForm';
 
 interface Props {}
 
 const Page: FC<Props> = ({}) => {
-    const router = useRouter();
+    const { mutateAsync, data, isLoading } = trpc.users.create.useMutation();
+
     const usernameState = useState('');
     const passwordState = useState('');
     const repeatedPasswordState = useState('');
@@ -31,11 +33,16 @@ const Page: FC<Props> = ({}) => {
             return;
         }
 
-        // smth like trpc.signUp(username, password)
-        if (false) {
-            router.push('/');
+        const resp = await mutateAsync({ username, password });
+        if (!resp?.success) {
+            console.log(resp?.message);
+            setError(resp?.message || 'Error while signing up');
         } else {
-            setError('User already exists');
+            void signIn('credentials', {
+                username,
+                password,
+                callbackUrl: '/',
+            });
         }
     };
 
@@ -43,6 +50,7 @@ const Page: FC<Props> = ({}) => {
         <AuthForm
             type={'signup'}
             {...{
+                isLoading,
                 handleSubmit,
                 usernameState,
                 passwordState,

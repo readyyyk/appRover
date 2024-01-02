@@ -11,8 +11,8 @@ interface Props {
     children: ReactNode;
 }
 const TRPCProvider: FC<Props> = ({ children }) => {
-    const [queryClient, _] = useState(() => new QueryClient({}));
-    const [trpcClient, __] = useState(() =>
+    const [queryClient] = useState(() => new QueryClient({}));
+    const [trpcClient] = useState(() =>
         trpc.createClient({
             links: [
                 httpBatchLink({

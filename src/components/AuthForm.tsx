@@ -14,10 +14,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 interface SharedProps {
+    isLoading: boolean;
     errorState: [string, Dispatch<SetStateAction<string>>];
     usernameState: [string, Dispatch<SetStateAction<string>>];
     passwordState: [string, Dispatch<SetStateAction<string>>];
-    handleSubmit: () => Promise<void>;
+    handleSubmit: () => Promise<void> | void;
 }
 interface SignInProps extends SharedProps {
     type: 'signin';
@@ -30,6 +31,7 @@ type Props = SignInProps | SignUpProps;
 const AuthForm: FC<Props> = (props) => {
     const { type } = props;
     const {
+        isLoading,
         handleSubmit,
         errorState: [error],
         usernameState: [username, setUsername],
@@ -45,7 +47,9 @@ const AuthForm: FC<Props> = (props) => {
             </CardHeader>
             <CardContent>
                 {error && (
-                    <p className={'text-center text-red-500 mb-4'}>{error}</p>
+                    <p className={'text-center text-red-500 mb-4 break-words'}>
+                        {error}
+                    </p>
                 )}
                 <form
                     className={'grid gap-3'}
@@ -89,21 +93,22 @@ const AuthForm: FC<Props> = (props) => {
                     )}
 
                     <div className={'flex gap-3'}>
-                        <Button type={'submit'} className={'w-fit'}>
+                        <Button
+                            type="submit"
+                            className="w-fit"
+                            loading={isLoading}
+                        >
                             Submit
                         </Button>
-                        <Button
-                            type={'button'}
-                            className={'w-fit'}
-                            variant={'outline'}
-                            asChild
+
+                        <Link
+                            className={'w-fit flex items-center'}
+                            href={`/sign${type === 'signin' ? 'up' : 'in'}`}
                         >
-                            <Link
-                                href={`/sign${type === 'signin' ? 'up' : 'in'}`}
-                            >
+                            <Button type={'button'} variant={'outline'}>
                                 Sign {type === 'signin' ? 'up' : 'in'}
-                            </Link>
-                        </Button>
+                            </Button>
+                        </Link>
                     </div>
                 </form>
             </CardContent>
