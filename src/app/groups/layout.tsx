@@ -5,8 +5,13 @@ import CenterLayout from '@/components/CenterLayout';
 interface Props {
     children: ReactNode;
 }
+
 const Layout: FC<Props> = ({ children }) => {
-    return <CenterLayout>{children}</CenterLayout>;
+    return (
+        <div className="absolute left-1/2 top-0 flex min-h-screen w-[95dvw] max-w-md -translate-x-1/2 items-center">
+            <CenterLayout>{children}</CenterLayout>
+        </div>
+    );
 };
 
 export default Layout;

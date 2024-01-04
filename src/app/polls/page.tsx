@@ -26,7 +26,7 @@ export default function Page() {
     const resp = trpc.getPreviews.useQuery({
         ownerId: 'e5e17f91-0095-4d86-99be-76e78dac502d',
     });
-    const { data: previews, error, isError, isLoading } = resp;
+    const { data: previews, error, isLoading } = resp;
 
     if (isLoading) {
         return (
@@ -43,7 +43,7 @@ export default function Page() {
         <h1 className={'text-secondary text-3xl'}>Nothing here...</h1>
     ) : (
         <div className="flex justify-center min-h-screen">
-            <div className={'flex flex-col w-[60dvw] mt-20'}>
+            <div className={'flex flex-col w-full md:w-[60dvw] mt-20'}>
                 <SearchBar
                     stateSearch={[searchValue, setSearchValue]}
                     stateAvailableStates={[availableStates, setAvailableStates]}

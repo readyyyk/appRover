@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <html lang="en" className={'dark'}>
             <body
                 className={cn(
-                    'relative min-h-screen overflow-x-hidden bg-background px-4 font-sans antialiased',
+                    'relative min-h-screen overflow-x-hidden bg-background px-4 pb-24 pt-4 md:pb-0 font-sans antialiased',
                     inter.className,
                 )}
             >

@@ -32,7 +32,7 @@ interface Props {
 
 const SearchBar: FC<Props> = ({
     stateSearch: [searchValue, setSearchValue],
-    stateDeadline: [_, setDeadlineSearchValues],
+    stateDeadline: [_, __],
     stateAvailableStates: [selectedStates, setSelectedStates],
     stateOwnerSearchValue: [ownerSearchValue, setOwnerSearchValue],
 }) => {
@@ -41,10 +41,11 @@ const SearchBar: FC<Props> = ({
             <div className={'flex gap-3 '}>
                 <Link href={'/polls/new'}>
                     <Button
-                        variant={'success'}
-                        className="h-auto me-4 text-lg flex gap-1"
+                        variant="success"
+                        className="h-full text-lg flex gap-1"
                     >
-                        <span>Create new</span> <PlusIcon />
+                        <span className="hidden md:inline">Create new</span>{' '}
+                        <PlusIcon />
                     </Button>
                 </Link>
                 <Input

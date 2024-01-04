@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    async redirects() {
+        return [
+            {
+                source: '/',
+                destination: '/polls',
+                permanent: true,
+            },
+        ];
+    },
     images: {
         dangerouslyAllowSVG: true,
         remotePatterns: [
