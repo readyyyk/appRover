@@ -1,12 +1,8 @@
 import { z } from 'zod';
 
-import { UuidSchema } from '@/types/uuid';
-
 export const UserSchema = z.object({
     id: z.number(),
     username: z.string(),
-    // firstname: z.string(),
-    // lastname: z.string(),
     password: z.string(),
     image: z.string().url(),
 });

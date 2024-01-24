@@ -1,16 +1,15 @@
 import { z } from 'zod';
 
-import { GroupSchema } from '@/types/group';
-import { UuidSchema } from '@/types/uuid';
+import { UserDataSchema } from '@/types/user';
 
 export const AllPollStates = ['frozen', 'active'] as const;
 export const PollStateSchema = z.enum(AllPollStates);
 
 export const PollSchema = z.object({
-    id: UuidSchema,
+    id: z.number(),
     title: z.string(),
     documentUrl: z.string().url(),
-    ownerId: UuidSchema, // FK
+    ownerId: z.number(), // FK
     deadline: z.date(),
     state: PollStateSchema,
     resultUrl: z.string().url().optional(),
@@ -20,7 +19,7 @@ export const PollSchema = z.object({
 });
 
 export const PollWithOwnerSchema = PollSchema.extend({
-    owner: GroupSchema,
+    owner: UserDataSchema,
 });
 
 export const PollCreateSchema = PollSchema.omit({

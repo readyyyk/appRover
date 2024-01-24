@@ -14,14 +14,18 @@ interface Props {
 
 const Layout: FC<Props> = ({ children }) => {
     return (
-        <CenterLayout className={'flex-1'}>
-            <Card className="w-96">
-                <CardHeader>
-                    <CardTitle className={'text-center'}>Create poll</CardTitle>
-                </CardHeader>
-                <CardContent>{children}</CardContent>
-            </Card>
-        </CenterLayout>
+        <div className={'h-screen'}>
+            <CenterLayout className={'flex-1'}>
+                <Card className="w-96">
+                    <CardHeader>
+                        <CardTitle className={'text-center'}>
+                            Create poll
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>{children}</CardContent>
+                </Card>
+            </CenterLayout>
+        </div>
     );
 };
 

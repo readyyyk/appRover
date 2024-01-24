@@ -17,6 +17,9 @@ export const usersRouter = createTRPCRouter({
             body: JSON.stringify(input),
         });
     }),
+    byId: publicProcedure.input(z.number()).query(({ input }) => {
+        return withWrapped(`/users/${input}`, UserDataSchema, null, {});
+    }),
     me: protectedProcedure.query(({ ctx }) => {
         return withWrapped('/users/me', UserDataSchema, ctx.session, {
             headers: {

@@ -79,8 +79,8 @@ const Page: FC = ({}) => {
                     required
                     type="text"
                     value={title}
-                    name="groupname"
-                    placeholder="Group name"
+                    name="title"
+                    placeholder="Poll title"
                     onChange={(e: _IE) => setTitle(e.target.value)}
                 />
             </Label>
@@ -95,9 +95,7 @@ const Page: FC = ({}) => {
                     disabled={(date) => date < new Date()}
                 />
             </Label>
-            <Label>
-                <SelectMyFile selectState={[fileId, setFileId]} />
-            </Label>
+            <SelectMyFile selectState={[fileId, setFileId]} />
 
             <Button type={'submit'} variant={'success'} loading={isLoading}>
                 Submit

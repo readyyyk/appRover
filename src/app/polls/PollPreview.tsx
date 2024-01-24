@@ -8,7 +8,7 @@ import { IPollWithOwner } from '@/types/poll';
 import { Button } from '@/app/_components/ui/button';
 import { Progress } from '@/app/_components/ui/progress';
 import { cn } from '@/lib/utils';
- 
+
 type Props = IPollWithOwner;
 const PollPreview: FC<Props> = ({
     id,
@@ -31,10 +31,10 @@ const PollPreview: FC<Props> = ({
                 <div className={'p-6 flex flex-col justify-between'}>
                     <h1 className={'text-2xl line-clamp-2'}>{title}</h1>
                     <a
-                        href={`/users/${encodeURIComponent(owner.name)}`}
+                        href={`/users/${encodeURIComponent(owner.username)}`}
                         className={'text-gray-500'}
                     >
-                        <h2 className={'line-clamp-2'}>@{owner.name}</h2>
+                        <h2 className={'line-clamp-2'}>@{owner.username}</h2>
                     </a>
                 </div>
                 <div

@@ -19,7 +19,7 @@ const Page: FC = async ({}) => {
     return (
         <div className="flex-1 max-w-6xl w-[95dvw] flex flex-wrap gap-12 justify-center">
             <Link href={'files/new'}>
-                <FilePreviewContainer className="bg-green-200 hover:bg-green-500 dark:bg-green-700 dark:hover:bg-green-500 transition-all grid place-content-center">
+                <FilePreviewContainer className="min-h-28 bg-green-200 hover:bg-green-500 dark:bg-green-700 dark:hover:bg-green-500 transition-all grid place-content-center">
                     <UploadIcon className={'w-12 h-12'} />
                 </FilePreviewContainer>
             </Link>

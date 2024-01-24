@@ -2,7 +2,7 @@
 
 import { Dispatch, FC, SetStateAction } from 'react';
 
-import { Loader2Icon } from 'lucide-react';
+import Link from 'next/link';
 
 import {
     Select,
@@ -11,6 +11,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/app/_components/ui/select';
+import { Skeleton } from '@/app/_components/ui/skeleton';
 import { api } from '@/trpc/react';
 
 interface Props {
@@ -19,6 +20,10 @@ interface Props {
 
 const SelectMyFile: FC<Props> = ({ selectState: [selected, setSelected] }) => {
     const { data, isLoading, error } = api.files.myShort.useQuery();
+
+    if (isLoading) {
+        return <Skeleton className="w-full h-10" />;
+    }
 
     if (error) {
         return (
@@ -36,6 +41,17 @@ const SelectMyFile: FC<Props> = ({ selectState: [selected, setSelected] }) => {
         );
     }
 
+    if (data.data.length === 0) {
+        return (
+            <Link
+                href={'/files/new'}
+                className="w-full h-10 d-flex justify-center bg-amber-700/25 text-amber-500 hover:bg-amber-700/30 transition-all hover:text-amber-400 rounded-lg flex items-center border-amber-500/0 hover:border-amber-500 border-2"
+            >
+                You have no files
+            </Link>
+        );
+    }
+
     const onValueChange = (s: string) => {
         setSelected(s);
     };
@@ -45,18 +61,14 @@ const SelectMyFile: FC<Props> = ({ selectState: [selected, setSelected] }) => {
                 <SelectValue placeholder="Select a file" />
             </SelectTrigger>
             <SelectContent>
-                {isLoading ? (
-                    <Loader2Icon className="animate-spin m-auto" />
-                ) : (
-                    data.data.map((el) => (
-                        <SelectItem
-                            value={String(el.id)}
-                            key={`select-my-file-id-${el.id}`}
-                        >
-                            {el.name}
-                        </SelectItem>
-                    ))
-                )}
+                {data.data.map((el) => (
+                    <SelectItem
+                        value={String(el.id)}
+                        key={`select-my-file-id-${el.id}`}
+                    >
+                        {el.name}
+                    </SelectItem>
+                ))}
             </SelectContent>
         </Select>
     );

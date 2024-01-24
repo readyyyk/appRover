@@ -2,8 +2,6 @@ import { FC } from 'react';
 
 import { notFound } from 'next/navigation';
 
-import { UuidSchema } from '@/types/uuid';
-
 import {
     Card,
     CardContent,
@@ -13,12 +11,10 @@ import {
 import { api } from '@/trpc/server';
 
 interface Props {
-    params: { groupId: string };
+    params: { groupId: number };
 }
 
 const Page: FC<Props> = async ({ params: { groupId } }) => {
-    if (!UuidSchema.safeParse(groupId).success) notFound();
-
     const data = await api.groups.byId.query({ id: groupId });
     if (!data) notFound();
 

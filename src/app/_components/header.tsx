@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 interface HeaderLinkProps {
     href: string;
     className?: string;
+    disabled?: boolean;
     children: ReactNode;
 }
 
@@ -18,12 +19,13 @@ export const HeaderLink: FC<HeaderLinkProps> = ({
     href,
     className,
     children,
+    disabled,
 }) => {
     const title = href.replace('/', '');
     return (
         <Link
             title={title || 'home'}
-            href={href}
+            href={disabled ? '#' : href}
             className={cn(
                 'rounded-full bg-background aspect-square w-auto h-full md:w-full md:h-auto grid place-items-center p-1 shadow shadow-transparent hover:shadow-white transition',
                 className,
@@ -53,7 +55,7 @@ const Header: FC = ({}) => {
             </HeaderLink>
 
             <div className={'flex    flex-row md:flex-col gap-2'}>
-                <HeaderLink href={'/groups'}>
+                <HeaderLink href={'/groups'} disabled>
                     <UsersIcon />
                     <span className={'sr-only'}>my groups</span>
                 </HeaderLink>

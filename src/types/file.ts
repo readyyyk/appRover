@@ -1,14 +1,14 @@
 import { z } from 'zod';
 
-import { UuidSchema } from '@/types/uuid';
-
 export const FileSchema = z.object({
     id: z.number(),
     name: z.string(),
     filetype: z.string(),
-    createdBy: UuidSchema,
+    ownerId: z.number(),
     createdAt: z.date(),
 });
+
+export const FileInfoSchema = FileSchema.extend({ link: z.string().url() });
 
 export const FileCreateSchema = FileSchema.omit({
     id: true,
@@ -23,5 +23,6 @@ export const FileShortSchema = FileSchema.omit({
 });
 
 export type IFile = z.infer<typeof FileSchema>;
+export type IFileInfo = z.infer<typeof FileInfoSchema>;
 export type IFileCreate = z.infer<typeof FileCreateSchema>;
 export type IFileShort = z.infer<typeof FileShortSchema>;

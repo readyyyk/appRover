@@ -1,58 +1,64 @@
-import { z } from 'zod';
-
 import {
     FileCreateSchema,
     FileSchema,
-    FileShortSchema,
+    IFile,
+    IFileInfo,
     IFileShort,
 } from '@/types/file';
+import { IApiResponse } from '@/types/response';
 
 import { withWrapped } from '@/lib/3rd-party-call';
-import {
-    createTRPCRouter,
-    protectedProcedure,
-    publicProcedure,
-} from '@/server/api/trpc';
+import { createMockFile, createMockFiles, random } from '@/lib/mock';
+import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
 
 export const filesRouter = createTRPCRouter({
-    byId: protectedProcedure
+    getById: protectedProcedure
         .input(FileSchema.pick({ id: true }))
-        .query(({ input, ctx }) => {
-            return withWrapped(
-                `/files/${input.id}/info`,
-                FileSchema,
-                ctx.session,
-                {
-                    headers: { Authorization: ctx.session.user.access_token },
-                },
-            );
+        .query(async ({ input, ctx }): Promise<IApiResponse<IFileInfo>> => {
+            // return withWrapped(
+            //     `/files/${input.id}/info`,
+            //     FileSchema,
+            //     ctx.session,
+            //     {
+            //         headers: { Authorization: ctx.session.user.access_token },
+            //     },
+            // );
+            return {
+                success: true,
+                data: createMockFile({ id: input.id }),
+            };
         }),
-    my: protectedProcedure.query(({ ctx }) => {
-        return withWrapped(`/files/my`, z.array(FileSchema), ctx.session, {
-            headers: {
-                Authorization: `Bearer ${ctx.session.user.access_token}`,
-            },
-        });
-    }),
-    myShort: protectedProcedure.query(({ ctx }) => {
-        // return withWrapped(
-        //     `/files/myShort`,
-        //     z.array(FileShortSchema),
-        //     ctx.session,
-        //     {
-        //         headers: {
-        //             Authorization: `Bearer ${ctx.session.user.access_token}`,
-        //         },
-        //     },
-        // );
-        return {
-            success: true,
-            data: [
-                { id: 1, name: '123' },
-                { id: 2, name: 'lorem lorem korenm koren asdqwe qwezfc ' },
-            ] as IFileShort[],
-        };
-    }),
+    my: protectedProcedure.query(
+        async ({ ctx }): Promise<IApiResponse<IFile[]>> => {
+            // return withWrapped(`/files/my`, z.array(FileSchema), ctx.session, {
+            //     headers: {
+            //         Authorization: `Bearer ${ctx.session.user.access_token}`,
+            //     },
+            // });
+            return {
+                success: true,
+                data: createMockFiles({ n: random({ max: 14 }) }),
+            };
+        },
+    ),
+    myShort: protectedProcedure.query(
+        async ({ ctx }): Promise<IApiResponse<IFileShort[]>> => {
+            // return await withWrapped(
+            //     `/files/myShort`,
+            //     z.array(FileShortSchema),
+            //     ctx.session,
+            //     {
+            //         headers: {
+            //             Authorization: `Bearer ${ctx.session.user.access_token}`,
+            //         },
+            //     },
+            // );
+            return {
+                success: true,
+                data: createMockFiles({ n: random({ max: 14 }) }),
+            };
+        },
+    ),
     create: protectedProcedure
         .input(FileCreateSchema)
         .mutation(({ ctx, input }) => {

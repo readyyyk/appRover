@@ -67,7 +67,7 @@ export default function Page() {
                                 .includes(searchValue.toLowerCase()),
                         )
                         .filter((a) =>
-                            a.owner.name
+                            a.owner.username
                                 .toLowerCase()
                                 .includes(ownerSearchValue.toLowerCase()),
                         )
