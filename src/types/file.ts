@@ -10,10 +10,9 @@ export const FileSchema = z.object({
 
 export const FileInfoSchema = FileSchema.extend({ link: z.string().url() });
 
-export const FileCreateSchema = FileSchema.omit({
-    id: true,
-    createdBy: true,
-    createdAt: true,
+export const FileCreateSchema = FileSchema.pick({
+    name: true,
+    filetype: true,
 });
 
 export const FileShortSchema = FileSchema.omit({
