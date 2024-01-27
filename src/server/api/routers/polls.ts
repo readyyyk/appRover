@@ -58,7 +58,7 @@ export const pollsRouter = createTRPCRouter({
     create: protectedProcedure
         .input(PollCreateSchema)
         .mutation(({ ctx, input }) => {
-            return withWrapped('/polls/create', PollSchema, ctx.session, {
+            return withWrapped('/polls/create', z.boolean(), ctx.session, {
                 method: 'POST',
                 body: JSON.stringify(input),
                 headers: {

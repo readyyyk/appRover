@@ -15,7 +15,7 @@ import { Skeleton } from '@/app/_components/ui/skeleton';
 import { api } from '@/trpc/react';
 
 interface Props {
-    selectState: [string, Dispatch<SetStateAction<string>>];
+    selectState: [number | null, Dispatch<SetStateAction<number | null>>];
 }
 
 const SelectMyFile: FC<Props> = ({ selectState: [selected, setSelected] }) => {
@@ -53,10 +53,13 @@ const SelectMyFile: FC<Props> = ({ selectState: [selected, setSelected] }) => {
     }
 
     const onValueChange = (s: string) => {
-        setSelected(s);
+        !isNaN(Number(s)) && setSelected(Number(s));
     };
     return (
-        <Select onValueChange={onValueChange} value={selected}>
+        <Select
+            onValueChange={onValueChange}
+            value={selected === null ? undefined : String(selected)}
+        >
             <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a file" />
             </SelectTrigger>

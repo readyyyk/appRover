@@ -49,7 +49,7 @@ export const createMockPoll = ({ id }: { id: number }): IPollWithOwner => {
     return {
         id: pollId,
         title: `${pollId} - Mock Poll`,
-        documentUrl: 'https://example.com',
+        fileId: random({}),
         ownerId: random({}),
         deadline: addDays(new Date(), random({})),
         state: AllPollStates[Math.floor(Math.random() * AllPollStates.length)]!,
@@ -69,10 +69,10 @@ export const createMockFile = ({ id }: { id: number }): IFileInfo => {
     return {
         id: id,
         name: id + ' - ' + randomStr(random({ max: 30 })),
-        filetype: 'text/plain',
+        filetype: 'application/msword',
         ownerId: Math.floor(Math.random() * 100),
         createdAt: new Date(),
-        link: 'https://example.com',
+        link: 'https://file-examples.com/wp-content/storage/2017/02/file-sample_100kB.doc',
     };
 };
 

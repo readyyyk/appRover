@@ -5,8 +5,11 @@ import { FC, useState, useTransition } from 'react';
 import { signIn } from 'next-auth/react';
 
 import AuthForm from '@/app/_components/auth-form';
+import { useRouter } from 'next/navigation';
 
 const Page: FC = ({}) => {
+    const router = useRouter();
+
     const usernameState = useState('');
     const passwordState = useState('');
     const errorState = useState('');
@@ -36,7 +39,7 @@ const Page: FC = ({}) => {
                 setError(resp.error);
                 return;
             }
-            location.replace('/');
+            router.push('/');
         });
 
     return (

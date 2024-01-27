@@ -10,6 +10,7 @@ import { _IE } from '@/types/utils';
 import { Button } from '@/app/_components/ui/button';
 import { Input } from '@/app/_components/ui/input';
 import { Label } from '@/app/_components/ui/label';
+import { allowedFileExtStr } from '@/assets/allowedFileExt';
 import { api } from '@/trpc/react';
 
 const Page: FC = ({}) => {
@@ -37,6 +38,8 @@ const Page: FC = ({}) => {
         }
 
         const file = fileInput.current.files[0]!;
+
+        console.log(file.type);
 
         const res = await mutateAsync({
             name: filename,
@@ -71,7 +74,7 @@ const Page: FC = ({}) => {
                     type="file"
                     name="file"
                     ref={fileInput}
-                    accept={'.docx, .doc, .pdf, application/msword'}
+                    accept={allowedFileExtStr}
                 />
             </Label>
             <Label>

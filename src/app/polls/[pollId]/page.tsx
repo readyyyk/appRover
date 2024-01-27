@@ -1,12 +1,13 @@
 import { FC } from 'react';
 
 import { format } from 'date-fns';
-import { ArrowDown, ArrowUp, Snowflake } from 'lucide-react';
+import { ArrowDown, ArrowUp, DownloadIcon, Snowflake } from 'lucide-react';
 
 import CopyButton from '@/app/_components/copy-button';
 import { Button } from '@/app/_components/ui/button';
 import { Card, CardContent, CardHeader } from '@/app/_components/ui/card';
 import { Progress } from '@/app/_components/ui/progress';
+import { FilePreviewContainer } from '@/app/files/file-preview';
 import { cn } from '@/lib/utils';
 import { api } from '@/trpc/server';
 
@@ -15,36 +16,41 @@ interface Props {
 }
 
 const Page: FC<Props> = async ({ params: { pollId } }) => {
-    const data = await api.polls.getById.query({ id: Number(pollId) });
-    if (!data.success) throw new Error(data.message);
+    const pollData = await api.polls.getById.query({ id: Number(pollId) });
+    if (!pollData.success) throw new Error(pollData.message);
+
+    const fileData = await api.files.getById.query({
+        id: pollData.data.fileId,
+    });
+    if (!fileData.success) throw new Error(fileData.message);
 
     const shareLink = 'share link';
 
     return (
         <Card
             className={cn(
-                'max-w-[95dvw] md:max-w-4xl shadow shadow-secondary flex-1 bg-slate-900',
-                data.data.state === 'frozen' && 'shadow shadow-blue-500',
+                'max-w-[95dvw] md:max-w-4xl w-[40rem] shadow shadow-secondary flex-1 bg-slate-900',
+                pollData.data.state === 'frozen' && 'shadow shadow-blue-500',
             )}
         >
             <CardHeader className={'flex-row'}>
                 <div className={'space-y-0 flex-1'}>
                     <div className="flex gap-3 items-baseline">
-                        <h1 className={'text-4xl'}>{data.data.title}</h1>
+                        <h1 className={'text-4xl'}>{pollData.data.title}</h1>
                         <CopyButton text={shareLink} />
                     </div>
                     <h2 className={'text-lg text-primary block'}>
-                        by @{data.data.owner.username}
+                        by @{pollData.data.owner.username}
                     </h2>
                 </div>
                 <h2 className="text-lg">
-                    {format(data.data.deadline, 'dd.MM.yyyy')}
+                    {format(pollData.data.deadline, 'dd.MM.yyyy')}
                 </h2>
             </CardHeader>
-            <CardContent className="grid grid-cols-2 gap-8 justify-normal">
+            <CardContent className="grid grid-cols-2 gap-8 justify-normal mt-8">
                 <div className="grid items-center">
                     <div className="">
-                        {data.data.state === 'active' ? (
+                        {pollData.data.state === 'active' ? (
                             <div className={'grid grid-cols-2 gap-3 p-4 pt-0'}>
                                 <h1
                                     className={
@@ -74,36 +80,54 @@ const Page: FC<Props> = async ({ params: { pollId } }) => {
                                 Voters count
                             </h1>
                             <h2 className={'text-3xl'}>
-                                {data.data.votersCount}
+                                {pollData.data.votersCount}
                             </h2>
 
                             <h1 className={'text-2xl col-span-2'}>Voted for</h1>
-                            <h2 className={'text-3xl'}>{data.data.votedFor}</h2>
+                            <h2 className={'text-3xl'}>
+                                {pollData.data.votedFor}
+                            </h2>
 
                             <h1 className={'text-2xl col-span-2'}>
                                 Voted against
                             </h1>
                             <h2 className={'text-3xl'}>
-                                {data.data.votedAgainst}
+                                {pollData.data.votedAgainst}
                             </h2>
                         </div>
 
                         <Progress
                             className={'bg-gray-700 h-8 mt-8'}
                             value={{
-                                [(data.data.votedFor / data.data.votersCount) *
+                                [(pollData.data.votedFor /
+                                    pollData.data.votersCount) *
                                 100]: 'rgb(34, 197, 94)',
-                                [(data.data.votedAgainst /
-                                    data.data.votersCount) *
+                                [(pollData.data.votedAgainst /
+                                    pollData.data.votersCount) *
                                 100]: 'red',
                             }}
                         />
                     </div>
                 </div>
-                <iframe
-                    src={data.data.documentUrl}
-                    className={'w-full aspect-[3/4] rounded'}
-                />
+
+                <div className="w-full rounded flex flex-col items-center justify-center">
+                    <h2 className="text-3xl text-center break-words">
+                        {fileData.data.name}
+                    </h2>
+                    <h3 className="text-primary text-lg">
+                        {fileData.data.filetype}
+                    </h3>
+                    <a
+                        href={fileData.data.link}
+                        download={fileData.data.name}
+                        target={'_blank'}
+                        className="mt-4"
+                    >
+                        <FilePreviewContainer className="h-24 w-40 bg-green-200 hover:bg-green-500 dark:bg-green-700 dark:hover:bg-green-500 transition-all grid place-content-center">
+                            <DownloadIcon className={'w-12 h-12'} />
+                        </FilePreviewContainer>
+                    </a>
+                </div>
             </CardContent>
         </Card>
     );

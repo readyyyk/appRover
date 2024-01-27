@@ -26,7 +26,7 @@ const Page: FC = ({}) => {
     const [title, setTitle] = useState('');
     const [deadline, setDeadline] = useState<Date>();
     const [error, setError] = useState('');
-    const [fileId, setFileId] = useState('');
+    const [fileId, setFileId] = useState<number | null>(null);
 
     useEffect(() => {
         setError('');
@@ -50,7 +50,7 @@ const Page: FC = ({}) => {
         const res = await mutateAsync({
             title: title,
             deadline: deadline,
-            documentUrl: fileId, // TODO
+            fileId: fileId,
         });
 
         if (!res.success) {
@@ -70,7 +70,7 @@ const Page: FC = ({}) => {
             }}
         >
             {!!error && (
-                <p className={'text-center text-red-500 mb-4 break-words'}>
+                <p className={'text-center text-red-500 mb-4 break-all'}>
                     {error}
                 </p>
             )}

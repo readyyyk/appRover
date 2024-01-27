@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import { format } from 'date-fns';
 import { DownloadIcon } from 'lucide-react';
-import Link from 'next/link';
 
 import { Card, CardContent, CardHeader } from '@/app/_components/ui/card';
 import { FilePreviewContainer } from '@/app/files/file-preview';
@@ -37,11 +36,15 @@ const Page: FC<Props> = async ({ params: { fileId } }) => {
                 </h2>
             </CardHeader>
             <CardContent className="flex items-center justify-center">
-                <Link href={data.data.link}>
+                <a
+                    href={data.data.link}
+                    download={data.data.name}
+                    target={'_blank'}
+                >
                     <FilePreviewContainer className="h-24 w-40 bg-green-200 hover:bg-green-500 dark:bg-green-700 dark:hover:bg-green-500 transition-all grid place-content-center">
                         <DownloadIcon className={'w-12 h-12'} />
                     </FilePreviewContainer>
-                </Link>
+                </a>
             </CardContent>
         </Card>
     );

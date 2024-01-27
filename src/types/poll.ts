@@ -8,7 +8,7 @@ export const PollStateSchema = z.enum(AllPollStates);
 export const PollSchema = z.object({
     id: z.number(),
     title: z.string(),
-    documentUrl: z.string().url(),
+    fileId: z.number(), // FK
     ownerId: z.number(), // FK
     deadline: z.date(),
     state: PollStateSchema,
@@ -22,14 +22,10 @@ export const PollWithOwnerSchema = PollSchema.extend({
     owner: UserDataSchema,
 });
 
-export const PollCreateSchema = PollSchema.omit({
-    id: true,
-    ownerId: true,
-    state: true,
-    resultUrl: true,
-    votersCount: true,
-    votedAgainst: true,
-    votedFor: true,
+export const PollCreateSchema = PollSchema.pick({
+    title: true,
+    fileId: true,
+    deadline: true,
 });
 
 export type IPoll = z.infer<typeof PollSchema>;
