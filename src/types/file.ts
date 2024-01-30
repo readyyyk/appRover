@@ -2,17 +2,26 @@ import { z } from 'zod';
 
 export const FileSchema = z.object({
     id: z.number(),
+    size: z.number(),
     name: z.string(),
     filetype: z.string(),
-    ownerId: z.number(),
-    createdAt: z.date(),
+    owner_id: z.number(),
+    created_at: z.string(),
 });
 
-export const FileInfoSchema = FileSchema.extend({ link: z.string().url() });
+export const FileInfoSchema = FileSchema.extend({ link: z.string() });
 
 export const FileCreateSchema = FileSchema.pick({
     name: true,
     filetype: true,
+}).extend({
+    file: z.any().refine((v) => {
+        console.log(v);
+        return v instanceof File;
+    }),
+});
+export const FileCreateResSchema = z.object({
+    created_id: z.number(),
 });
 
 export const FileShortSchema = FileSchema.omit({

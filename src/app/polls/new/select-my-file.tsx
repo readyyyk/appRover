@@ -19,7 +19,7 @@ interface Props {
 }
 
 const SelectMyFile: FC<Props> = ({ selectState: [selected, setSelected] }) => {
-    const { data, isLoading, error } = api.files.myShort.useQuery();
+    const { data, isLoading, error } = api.files.my.useQuery();
 
     if (isLoading) {
         return <Skeleton className="w-full h-10" />;
@@ -41,7 +41,7 @@ const SelectMyFile: FC<Props> = ({ selectState: [selected, setSelected] }) => {
         );
     }
 
-    if (data.data.length === 0) {
+    if (!data.data.files || data.data.files?.length === 0) {
         return (
             <Link
                 href={'/files/new'}
@@ -64,7 +64,7 @@ const SelectMyFile: FC<Props> = ({ selectState: [selected, setSelected] }) => {
                 <SelectValue placeholder="Select a file" />
             </SelectTrigger>
             <SelectContent>
-                {data.data.map((el) => (
+                {data.data.files.map((el) => (
                     <SelectItem
                         value={String(el.id)}
                         key={`select-my-file-id-${el.id}`}

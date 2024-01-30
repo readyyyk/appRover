@@ -2,6 +2,7 @@
 
 import { FC, useEffect, useState } from 'react';
 
+import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
 
 import { _IE } from '@/types/utils';
@@ -49,8 +50,8 @@ const Page: FC = ({}) => {
         }
         const res = await mutateAsync({
             title: title,
-            deadline: deadline,
-            fileId: fileId,
+            deadline: format(deadline, 'yyyy-MM-dd'),
+            file_id: fileId,
         });
 
         if (!res.success) {

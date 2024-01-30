@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { FileInfoSchema, FileSchema } from '@/types/file';
 import { UserDataSchema } from '@/types/user';
 
 export const AllPollStates = ['frozen', 'active'] as const;
@@ -8,24 +9,36 @@ export const PollStateSchema = z.enum(AllPollStates);
 export const PollSchema = z.object({
     id: z.number(),
     title: z.string(),
-    fileId: z.number(), // FK
-    ownerId: z.number(), // FK
-    deadline: z.date(),
+    file_id: z.number(), // FK
+    owner_id: z.number(), // FK
+    deadline: z.string(),
     state: PollStateSchema,
-    resultUrl: z.string().url().optional(),
-    votedFor: z.number(),
-    votedAgainst: z.number(),
-    votersCount: z.number(),
+    // result_url: z.string().url().optional().nullable(),
+    voted_for: z.number(),
+    voted_against: z.number(),
+    voter_count: z.number(),
 });
 
 export const PollWithOwnerSchema = PollSchema.extend({
     owner: UserDataSchema,
 });
 
+export const PollExtSchema = PollSchema.omit({
+    file_id: true,
+    owner_id: true,
+}).extend({
+    owner: UserDataSchema,
+    file: FileInfoSchema,
+});
+
 export const PollCreateSchema = PollSchema.pick({
     title: true,
-    fileId: true,
+    file_id: true,
     deadline: true,
+});
+
+export const CreateResponseSchema = z.object({
+    created_id: z.number(),
 });
 
 export type IPoll = z.infer<typeof PollSchema>;

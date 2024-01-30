@@ -23,7 +23,7 @@ export default function Page() {
         'frozen',
     ]);
 
-    const resp = api.polls.getPreviews.useQuery();
+    const resp = api.polls.my.useQuery();
     const { data: previews, error, isLoading } = resp;
 
     if (isLoading) {
@@ -60,7 +60,7 @@ export default function Page() {
                     ]}
                 />
                 <div className={'flex flex-col space-y-16 mt-24 mb-10'}>
-                    {previews.data
+                    {previews.data.polls
                         .filter((a) =>
                             a.title
                                 .toLowerCase()
@@ -76,7 +76,7 @@ export default function Page() {
                             <PollPreview
                                 key={preview.id}
                                 {...preview}
-                                deadline={new Date(preview.deadline)}
+                                // deadline={new Date(preview.deadline)}
                             />
                         ))}
                 </div>

@@ -16,4 +16,12 @@ export const authRouter = createTRPCRouter({
             body: JSON.stringify(input),
         });
     }),
+    // refresh: protectedProcedure.query(({ ctx }) => {
+    //     return withWrapped('/auth/refresh', TokensSchema, null, {
+    //         method: 'GET',
+    //         headers: {
+    //             Authorization: `Bearer ${ctx.session.user.refresh_token}`,
+    //         },
+    //     });
+    // }),
 });

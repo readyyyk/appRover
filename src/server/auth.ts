@@ -42,7 +42,7 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         jwt: async ({ token, user }) => {
-            console.log('\n\njwt callback');
+            console.log('\n>>> jwt callback');
             if (user) {
                 token.user = {
                     image: user.image,

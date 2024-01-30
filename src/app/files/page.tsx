@@ -1,12 +1,15 @@
 import { FC } from 'react';
 
 import { UploadIcon } from 'lucide-react';
+import { unstable_noStore } from 'next/cache';
 import Link from 'next/link';
 
 import FilePreview, { FilePreviewContainer } from '@/app/files/file-preview';
 import { api } from '@/trpc/server';
 
 const Page: FC = async ({}) => {
+    unstable_noStore();
+
     const files = await api.files.my.query();
     if (!files.success) {
         return (
@@ -23,7 +26,7 @@ const Page: FC = async ({}) => {
                     <UploadIcon className={'w-12 h-12'} />
                 </FilePreviewContainer>
             </Link>
-            {files.data.map((file) => (
+            {files.data.files?.map((file) => (
                 <Link href={`files/${file.id}`} key={`file-${file.id}`}>
                     <FilePreview {...file} />
                 </Link>

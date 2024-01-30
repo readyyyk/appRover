@@ -6,6 +6,7 @@ import { DownloadIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/app/_components/ui/card';
 import { FilePreviewContainer } from '@/app/files/file-preview';
 import { cn } from '@/lib/utils';
+import { getServerAuthSession } from '@/server/auth';
 import { api } from '@/trpc/server';
 
 interface Props {
@@ -15,6 +16,9 @@ interface Props {
 const Page: FC<Props> = async ({ params: { fileId } }) => {
     const data = await api.files.getById.query({ id: Number(fileId) });
     if (!data.success) throw new Error(data.message);
+
+    const session = await getServerAuthSession();
+    if (!session) throw new Error('No session');
 
     return (
         <Card
@@ -32,12 +36,17 @@ const Page: FC<Props> = async ({ params: { fileId } }) => {
                     </h2>
                 </div>
                 <h2 className="text-lg">
-                    {format(data.data.createdAt, 'dd.MM.yyyy')}
+                    {format(data.data.created_at, 'dd.MM.yyyy')}
                 </h2>
             </CardHeader>
             <CardContent className="flex items-center justify-center">
                 <a
-                    href={data.data.link}
+                    href={
+                        process.env.BACKEND_URL +
+                        data.data.link +
+                        '?token=' +
+                        session.user.access_token
+                    }
                     download={data.data.name}
                     target={'_blank'}
                 >

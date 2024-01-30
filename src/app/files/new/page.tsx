@@ -2,7 +2,11 @@
 
 import { FC, useEffect, useRef, useState } from 'react';
 
+// import { api } from '@/trpc/react';
+import { useMutation } from '@tanstack/react-query';
 import { FileIcon } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { revalidatePath } from 'next/cache';
 import { useRouter } from 'next/navigation';
 
 import { _IE } from '@/types/utils';
@@ -11,23 +15,28 @@ import { Button } from '@/app/_components/ui/button';
 import { Input } from '@/app/_components/ui/input';
 import { Label } from '@/app/_components/ui/label';
 import { allowedFileExtStr } from '@/assets/allowedFileExt';
-import { api } from '@/trpc/react';
+import revalidate from '@/lib/revalidate';
+
+import { tempUpload } from './uploadFunc';
 
 const Page: FC = ({}) => {
     const router = useRouter();
+    const session = useSession();
 
     const fileInput = useRef<HTMLInputElement>(null);
     const [filename, setFilename] = useState('');
     const {
         error: trpcError,
+        // mutateAsync,
         mutateAsync,
         isLoading,
-    } = api.files.create.useMutation();
+    } = useMutation(tempUpload);
+    // = api.files.create.useMutation();
 
     const [error, setError] = useState('');
     useEffect(() => {
         if (trpcError) {
-            setError(trpcError.message);
+            setError(String(trpcError));
         }
     }, [trpcError]);
 
@@ -39,11 +48,21 @@ const Page: FC = ({}) => {
 
         const file = fileInput.current.files[0]!;
 
-        console.log(file.type);
+        if (file.size > 10000000) {
+            setError('File size must be less than 10MB');
+            return;
+        }
 
+        const formData = new FormData();
+        formData.set('file', file);
+        formData.set('filename', filename);
+
+        if (!session.data?.user.access_token) {
+            return console.log('no token');
+        }
         const res = await mutateAsync({
-            name: filename,
-            filetype: file.type,
+            data: formData,
+            token: session.data.user.access_token,
         });
 
         if (!res.success) {
@@ -51,6 +70,7 @@ const Page: FC = ({}) => {
             return;
         }
 
+        revalidate('page', '/files', 'page');
         router.push('/files');
     };
 

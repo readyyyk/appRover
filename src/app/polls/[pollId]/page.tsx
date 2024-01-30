@@ -20,7 +20,7 @@ const Page: FC<Props> = async ({ params: { pollId } }) => {
     if (!pollData.success) throw new Error(pollData.message);
 
     const fileData = await api.files.getById.query({
-        id: pollData.data.fileId,
+        id: pollData.data.file_id,
     });
     if (!fileData.success) throw new Error(fileData.message);
 
@@ -80,30 +80,30 @@ const Page: FC<Props> = async ({ params: { pollId } }) => {
                                 Voters count
                             </h1>
                             <h2 className={'text-3xl'}>
-                                {pollData.data.votersCount}
+                                {pollData.data.voter_count}
                             </h2>
 
                             <h1 className={'text-2xl col-span-2'}>Voted for</h1>
                             <h2 className={'text-3xl'}>
-                                {pollData.data.votedFor}
+                                {pollData.data.voted_for}
                             </h2>
 
                             <h1 className={'text-2xl col-span-2'}>
                                 Voted against
                             </h1>
                             <h2 className={'text-3xl'}>
-                                {pollData.data.votedAgainst}
+                                {pollData.data.voted_against}
                             </h2>
                         </div>
 
                         <Progress
                             className={'bg-gray-700 h-8 mt-8'}
                             value={{
-                                [(pollData.data.votedFor /
-                                    pollData.data.votersCount) *
+                                [(pollData.data.voted_for /
+                                    pollData.data.voter_count) *
                                 100]: 'rgb(34, 197, 94)',
-                                [(pollData.data.votedAgainst /
-                                    pollData.data.votersCount) *
+                                [(pollData.data.voted_against /
+                                    pollData.data.voter_count) *
                                 100]: 'red',
                             }}
                         />

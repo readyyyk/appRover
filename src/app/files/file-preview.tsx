@@ -22,13 +22,13 @@ export const FilePreviewContainer: FC<{
 );
 
 type Props = IFile;
-const FilePreview: FC<Props> = ({ name, createdAt }) => {
+const FilePreview: FC<Props> = ({ name, created_at }) => {
     return (
         <FilePreviewContainer>
             <div className="flex flex-col text-center gap-6 justify-between h-full p-4">
                 <CardTitle className={'break-words'}>{name}</CardTitle>
                 <p className={'text-lg text-gray-400'}>
-                    {format(new Date(createdAt), 'dd.MM.yyyy')}
+                    {format(new Date(created_at), 'dd.MM.yyyy')}
                 </p>
             </div>
         </FilePreviewContainer>

@@ -1,5 +1,8 @@
+import { z } from 'zod';
+
 import {
     FileCreateSchema,
+    FileInfoSchema,
     FileSchema,
     IFile,
     IFileInfo,
@@ -8,6 +11,7 @@ import {
 import { IApiResponse } from '@/types/response';
 
 import { withWrapped } from '@/lib/3rd-party-call';
+// import { withWrapped } from '@/lib/3rd-party-call';
 import { createMockFile, createMockFiles, random } from '@/lib/mock';
 import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
 
@@ -15,32 +19,54 @@ export const filesRouter = createTRPCRouter({
     getById: protectedProcedure
         .input(FileSchema.pick({ id: true }))
         .query(async ({ input, ctx }): Promise<IApiResponse<IFileInfo>> => {
-            // return withWrapped(
-            //     `/files/${input.id}/info`,
-            //     FileSchema,
-            //     ctx.session,
-            //     {
-            //         headers: { Authorization: ctx.session.user.access_token },
-            //     },
-            // );
-            return {
-                success: true,
-                data: createMockFile({ id: input.id }),
-            };
+            return withWrapped(
+                `/files/${input.id}/info`,
+                FileInfoSchema,
+                ctx.session,
+                {
+                    headers: {
+                        Authorization: `Bearer ${ctx.session.user.access_token}`,
+                    },
+                },
+            );
+            // return {
+            //     success: true,
+            //     data: createMockFile({ id: input.id }),
+            // };
         }),
-    my: protectedProcedure.query(
-        async ({ ctx }): Promise<IApiResponse<IFile[]>> => {
-            // return withWrapped(`/files/my`, z.array(FileSchema), ctx.session, {
-            //     headers: {
-            //         Authorization: `Bearer ${ctx.session.user.access_token}`,
-            //     },
-            // });
-            return {
-                success: true,
-                data: createMockFiles({ n: random({ max: 14 }) }),
-            };
-        },
-    ),
+    download: protectedProcedure
+        .input(FileSchema.pick({ id: true }))
+        .query(async ({ input, ctx }) => {
+            return withWrapped(
+                `/files/${input.id}/download`,
+                FileInfoSchema,
+                ctx.session,
+                {
+                    headers: {
+                        Authorization: `Bearer ${ctx.session.user.access_token}`,
+                    },
+                },
+            );
+        }),
+    my: protectedProcedure.query(async ({ ctx }) => {
+        //: Promise<IApiResponse<IFile[]>> => {
+        return withWrapped(
+            `/files/my`,
+            z.object({
+                files: z.array(FileInfoSchema).optional(),
+            }),
+            null,
+            {
+                headers: {
+                    Authorization: `Bearer ${ctx.session.user.access_token}`,
+                },
+            },
+        );
+        // return {
+        //     success: true,
+        //     data: createMockFiles({ n: random({ max: 14 }) }),
+        // };
+    }),
     myShort: protectedProcedure.query(
         async ({ ctx }): Promise<IApiResponse<IFileShort[]>> => {
             // return await withWrapped(
@@ -61,14 +87,21 @@ export const filesRouter = createTRPCRouter({
     ),
     create: protectedProcedure
         .input(FileCreateSchema)
-        .mutation(({ ctx, input }) => {
-            return withWrapped(`/files/create`, FileSchema, null, {
+        .mutation(async ({ ctx, input }) => {
+            throw new Error('Not implemented');
+            /*const data = new FormData(input);
+            console.log(data);
+
+            for (const value of data?.values()) {
+                console.log(value);
+            }
+            return await withWrapped(`/files/create`, FileSchema, null, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${ctx.session.user.access_token}`,
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'multipart/form-data',
                 },
-                body: JSON.stringify(input),
-            });
+                body: data,
+            });*/
         }),
 });
