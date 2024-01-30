@@ -7,6 +7,7 @@ import CopyButton from '@/app/_components/copy-button';
 import { Button } from '@/app/_components/ui/button';
 import { Card, CardContent, CardHeader } from '@/app/_components/ui/card';
 import { Progress } from '@/app/_components/ui/progress';
+import DownloadFileButton from '@/app/files/[fileId]/download';
 import { FilePreviewContainer } from '@/app/files/file-preview';
 import { cn } from '@/lib/utils';
 import { api } from '@/trpc/server';
@@ -19,10 +20,7 @@ const Page: FC<Props> = async ({ params: { pollId } }) => {
     const pollData = await api.polls.getById.query({ id: Number(pollId) });
     if (!pollData.success) throw new Error(pollData.message);
 
-    const fileData = await api.files.getById.query({
-        id: pollData.data.file_id,
-    });
-    if (!fileData.success) throw new Error(fileData.message);
+    const fileData = pollData.data.file;
 
     const shareLink = 'share link';
 
@@ -111,22 +109,16 @@ const Page: FC<Props> = async ({ params: { pollId } }) => {
                 </div>
 
                 <div className="w-full rounded flex flex-col items-center justify-center">
-                    <h2 className="text-3xl text-center break-words">
-                        {fileData.data.name}
+                    <h2 className="text-3xl text-center break-all">
+                        {fileData.name}
                     </h2>
-                    <h3 className="text-primary text-lg">
-                        {fileData.data.filetype}
+                    <h3 className="text-primary text-lg break-all">
+                        {fileData.filetype}
                     </h3>
-                    <a
-                        href={fileData.data.link}
-                        download={fileData.data.name}
-                        target={'_blank'}
-                        className="mt-4"
-                    >
-                        <FilePreviewContainer className="h-24 w-40 bg-green-200 hover:bg-green-500 dark:bg-green-700 dark:hover:bg-green-500 transition-all grid place-content-center">
-                            <DownloadIcon className={'w-12 h-12'} />
-                        </FilePreviewContainer>
-                    </a>
+                    <DownloadFileButton
+                        link={fileData.link}
+                        name={fileData.name}
+                    />
                 </div>
             </CardContent>
         </Card>

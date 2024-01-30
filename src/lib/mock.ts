@@ -1,4 +1,4 @@
-import { addDays } from 'date-fns';
+import { addDays, format } from 'date-fns';
 
 import { IFileInfo } from '@/types/file';
 import { AllPollStates, IPollWithOwner } from '@/types/poll';
@@ -43,20 +43,20 @@ export function createMocksFactory<T>(
 export const createMockPoll = ({ id }: { id: number }): IPollWithOwner => {
     const userId = random({ min: 1, max: 3 });
     const pollId = id;
-    const votersCount = random({ min: 1, max: 4000 });
-    const votedFor = random({ max: votersCount });
-    const votedAgainst = random({ max: votersCount - votedFor });
+    const voter_count = random({ min: 1, max: 4000 });
+    const voted_for = random({ max: voter_count });
+    const voted_against = random({ max: voter_count - voted_for });
     return {
         id: pollId,
         title: `${pollId} - Mock Poll`,
-        fileId: random({}),
-        ownerId: random({}),
-        deadline: addDays(new Date(), random({})),
+        file_id: random({}),
+        owner_id: random({}),
+        deadline: format(addDays(new Date(), random({})), 'yyyy-MM-dd'),
         state: AllPollStates[Math.floor(Math.random() * AllPollStates.length)]!,
-        resultUrl: 'https://example.com',
-        votedFor,
-        votedAgainst,
-        votersCount,
+        // result_url: 'https://example.com',
+        voted_for,
+        voted_against,
+        voter_count,
         owner: {
             id: userId,
             image: `https://api.dicebear.com/7.x/identicon/svg?seed=${userId}`,
@@ -70,8 +70,9 @@ export const createMockFile = ({ id }: { id: number }): IFileInfo => {
         id: id,
         name: id + ' - ' + randomStr(random({ max: 30 })),
         filetype: 'application/msword',
-        ownerId: Math.floor(Math.random() * 100),
-        createdAt: new Date(),
+        size: random({ max: 10000 }),
+        owner_id: Math.floor(Math.random() * 100),
+        created_at: format(new Date(), 'yyyy-MM-dd'),
         link: 'https://file-examples.com/wp-content/storage/2017/02/file-sample_100kB.doc',
     };
 };

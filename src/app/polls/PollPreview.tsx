@@ -9,16 +9,16 @@ import { Button } from '@/app/_components/ui/button';
 import { Progress } from '@/app/_components/ui/progress';
 import { cn } from '@/lib/utils';
 
-type Props = IPollWithOwner;
+type Props = Omit<Omit<IPollWithOwner, 'owner_id'>, 'file_id'>;
 const PollPreview: FC<Props> = ({
     id,
     state,
     title,
     owner,
     deadline,
-    votersCount,
-    votedFor,
-    votedAgainst,
+    voter_count,
+    voted_for,
+    voted_against,
 }) => {
     return (
         <div
@@ -60,9 +60,9 @@ const PollPreview: FC<Props> = ({
                         <Progress
                             className={'bg-gray-700'}
                             value={{
-                                [(votedFor / votersCount) * 100]:
+                                [(voted_for / voter_count) * 100]:
                                     'rgb(34, 197, 94)',
-                                [(votedAgainst / votersCount) * 100]: 'red',
+                                [(voted_against / voter_count) * 100]: 'red',
                             }}
                         />
                     </div>

@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 import {
     CreateResponseSchema,
+    IPoll,
+    IPollExt,
     IPollWithOwner,
     PollCreateSchema,
     PollExtSchema,
@@ -46,24 +48,22 @@ export const pollsRouter = createTRPCRouter({
     ),*/
     getById: protectedProcedure
         .input(PollSchema.pick({ id: true }))
-        .query(
-            async ({ ctx, input }): Promise<IApiResponse<IPollWithOwner>> => {
-                // return await withWrapped(
-                //     `/polls/${input.id}`,
-                //     PollWithOwnerSchema,
-                //     ctx.session,
-                //     {
-                //         headers: {
-                //             Authorization: `Bearer ${ctx.session.user.access_token}`,
-                //         },
-                //     },
-                // );
-                return {
-                    success: true,
-                    data: createMockPoll({ id: input.id }),
-                };
-            },
-        ),
+        .query(async ({ ctx, input }): Promise<IApiResponse<IPollExt>> => {
+            return await withWrapped(
+                `/polls/${input.id}/info`,
+                PollExtSchema,
+                null,
+                {
+                    headers: {
+                        Authorization: `Bearer ${ctx.session.user.access_token}`,
+                    },
+                },
+            );
+            // return {
+            //     success: true,
+            //     data: createMockPoll({ id: input.id }),
+            // };
+        }),
     /*getCreatedByMe: protectedProcedure.query(async ({ ctx }) => {
         return await withWrapped(
             '/polls/created_by_me',

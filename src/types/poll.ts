@@ -42,6 +42,7 @@ export const CreateResponseSchema = z.object({
 });
 
 export type IPoll = z.infer<typeof PollSchema>;
+export type IPollExt = z.infer<typeof PollExtSchema>;
 export type IPollState = z.infer<typeof PollStateSchema>;
 export type IPollCreate = z.infer<typeof PollCreateSchema>;
 export type IPollWithOwner = z.infer<typeof PollWithOwnerSchema>;
