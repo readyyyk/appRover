@@ -1,14 +1,18 @@
 import { FC } from 'react';
 
 import { format } from 'date-fns';
-import { ArrowDown, ArrowUp, DownloadIcon, Snowflake } from 'lucide-react';
+import { LinkIcon, Snowflake } from 'lucide-react';
 
-import CopyButton from '@/app/_components/copy-button';
+import {
+    AlertDialog,
+    AlertDialogTrigger,
+} from '@/app/_components/ui/alert-dialog';
 import { Button } from '@/app/_components/ui/button';
 import { Card, CardContent, CardHeader } from '@/app/_components/ui/card';
 import { Progress } from '@/app/_components/ui/progress';
 import DownloadFileButton from '@/app/files/[fileId]/download';
-import { FilePreviewContainer } from '@/app/files/file-preview';
+import InviteDialog from '@/app/polls/[pollId]/invite';
+import VoteButtons from '@/app/polls/[pollId]/vote';
 import { cn } from '@/lib/utils';
 import { api } from '@/trpc/server';
 
@@ -22,8 +26,6 @@ const Page: FC<Props> = async ({ params: { pollId } }) => {
 
     const fileData = pollData.data.file;
 
-    const shareLink = 'share link';
-
     return (
         <Card
             className={cn(
@@ -35,7 +37,15 @@ const Page: FC<Props> = async ({ params: { pollId } }) => {
                 <div className={'space-y-0 flex-1'}>
                     <div className="flex gap-3 items-baseline">
                         <h1 className={'text-4xl'}>{pollData.data.title}</h1>
-                        <CopyButton text={shareLink} />
+
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button size="icon" variant="outline">
+                                    <LinkIcon />
+                                </Button>
+                            </AlertDialogTrigger>
+                            <InviteDialog poll_id={pollData.data.id} />
+                        </AlertDialog>
                     </div>
                     <h2 className={'text-lg text-primary block'}>
                         by @{pollData.data.owner.username}
@@ -49,21 +59,10 @@ const Page: FC<Props> = async ({ params: { pollId } }) => {
                 <div className="grid items-center">
                     <div className="">
                         {pollData.data.state === 'active' ? (
-                            <div className={'grid grid-cols-2 gap-3 p-4 pt-0'}>
-                                <h1
-                                    className={
-                                        'text-center col-span-2 text-3xl'
-                                    }
-                                >
-                                    Vote:
-                                </h1>
-                                <Button className={'bg-green-500'}>
-                                    For <ArrowUp className={'h-5'} />
-                                </Button>
-                                <Button className={'bg-red-500'}>
-                                    Against <ArrowDown className={'h-5'} />
-                                </Button>
-                            </div>
+                            <VoteButtons
+                                poll_id={pollData.data.id}
+                                my_vote={pollData.data.my_vote}
+                            />
                         ) : (
                             <div className="w-full mb-4 text-blue-500 flex items-center text-2xl gap-2 justify-center">
                                 <Snowflake className={'h-10 w-auto'} />

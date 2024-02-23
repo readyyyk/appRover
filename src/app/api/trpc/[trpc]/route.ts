@@ -5,6 +5,8 @@ import { env } from '@/env';
 import { appRouter } from '@/server/api/root';
 import { createTRPCContext } from '@/server/api/trpc';
 
+export const revalidate = 0;
+
 const createContext = async (req: NextRequest) => {
     return createTRPCContext({
         headers: req.headers,
@@ -17,6 +19,13 @@ const handler = (req: NextRequest) =>
         endpoint: '/api/trpc',
         router: appRouter,
         createContext: () => createContext(req),
+        responseMeta(opts) {
+            return {
+                headers: {
+                    'cache-control': `no-cache`,
+                },
+            };
+        },
         onError:
             env.NODE_ENV === 'development'
                 ? ({ path, error }) => {

@@ -5,10 +5,12 @@ import {
     IPoll,
     IPollExt,
     IPollWithOwner,
+    IPollWithVote,
     PollCreateSchema,
     PollExtSchema,
     PollSchema,
     PollWithOwnerSchema,
+    PollWithVoteSchema,
 } from '@/types/poll';
 import { IApiResponse } from '@/types/response';
 
@@ -48,10 +50,10 @@ export const pollsRouter = createTRPCRouter({
     ),*/
     getById: protectedProcedure
         .input(PollSchema.pick({ id: true }))
-        .query(async ({ ctx, input }): Promise<IApiResponse<IPollExt>> => {
+        .query(async ({ ctx, input }): Promise<IApiResponse<IPollWithVote>> => {
             return await withWrapped(
                 `/polls/${input.id}/info`,
-                PollExtSchema,
+                PollWithVoteSchema,
                 null,
                 {
                     headers: {
@@ -79,7 +81,6 @@ export const pollsRouter = createTRPCRouter({
     create: protectedProcedure
         .input(PollCreateSchema)
         .mutation(({ ctx, input }) => {
-            console.log(JSON.stringify(input));
             return withWrapped('/polls/create', CreateResponseSchema, null, {
                 method: 'POST',
                 body: JSON.stringify(input),
@@ -88,5 +89,63 @@ export const pollsRouter = createTRPCRouter({
                     Authorization: `Bearer ${ctx.session.user.access_token}`,
                 },
             });
+        }),
+
+    vote: protectedProcedure
+        .input(
+            z.object({
+                pollId: z.number(),
+                isFor: z.boolean(),
+            }),
+        )
+        .query(async ({ ctx, input }) => {
+            return await withWrapped(
+                `/polls/${input.pollId}/vote?is_for=${input.isFor}`,
+                z.null(),
+                null,
+                {
+                    headers: {
+                        Authorization: `Bearer ${ctx.session.user.access_token}`,
+                    },
+                },
+            );
+        }),
+
+    getInvite: protectedProcedure
+        .input(z.number())
+        .query(async ({ ctx, input }): Promise<IApiResponse<string>> => {
+            const resp = await withWrapped(
+                `/invites/poll/${input}/get-or-create`,
+                z.string(),
+                null,
+                {
+                    headers: {
+                        Authorization: `Bearer ${ctx.session.user.access_token}`,
+                    },
+                },
+            );
+            if (!resp.success) {
+                return resp;
+            }
+
+            return {
+                success: true,
+                data: `/invites/poll/${resp.data}/redirect`,
+            };
+        }),
+
+    useInvite: protectedProcedure
+        .input(z.string())
+        .query(async ({ ctx, input }): Promise<IApiResponse<number>> => {
+            return await withWrapped(
+                `/invites/poll/${input}/use`,
+                z.number(),
+                null,
+                {
+                    headers: {
+                        Authorization: `Bearer ${ctx.session.user.access_token}`,
+                    },
+                },
+            );
         }),
 });

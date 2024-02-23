@@ -31,6 +31,10 @@ export const PollExtSchema = PollSchema.omit({
     file: FileInfoSchema,
 });
 
+export const PollWithVoteSchema = PollExtSchema.extend({
+    my_vote: z.boolean().nullable(),
+});
+
 export const PollCreateSchema = PollSchema.pick({
     title: true,
     file_id: true,
@@ -45,4 +49,5 @@ export type IPoll = z.infer<typeof PollSchema>;
 export type IPollExt = z.infer<typeof PollExtSchema>;
 export type IPollState = z.infer<typeof PollStateSchema>;
 export type IPollCreate = z.infer<typeof PollCreateSchema>;
+export type IPollWithVote = z.infer<typeof PollWithVoteSchema>;
 export type IPollWithOwner = z.infer<typeof PollWithOwnerSchema>;
