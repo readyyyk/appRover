@@ -18,7 +18,7 @@ const Progress = React.forwardRef<
         React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>,
         'value'
     > & {
-        value: Record<number, string>;
+        value: Record<string, number>;
     }
 >(({ className, value, ...props }, ref) => (
     <ProgressPrimitive.Root
@@ -32,16 +32,16 @@ const Progress = React.forwardRef<
         {Object.entries(value)
             .sort((a, b) => Number(b[0]) - Number(a[0]))
             .map(([key, value], i) => {
-                const keyNumber = Math.floor(Number(key));
+                const keyNumber = Math.floor(Number(value));
                 return (
-                    <TooltipProvider key={`bar-${keyNumber}-${i}`}>
+                    <TooltipProvider key={`bar-${key}-${i}`}>
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <div
                                     className="h-full transition-all"
                                     style={{
-                                        width: keyNumber + '%',
-                                        backgroundColor: value,
+                                        width: value + '%',
+                                        backgroundColor: key,
                                     }}
                                 >
                                     <span className={'sr-only'}>

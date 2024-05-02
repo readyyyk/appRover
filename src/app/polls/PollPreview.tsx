@@ -60,9 +60,9 @@ const PollPreview: FC<Props> = ({
                         <Progress
                             className={'bg-gray-700'}
                             value={{
-                                [(voted_for / voter_count) * 100]:
-                                    'rgb(34, 197, 94)',
-                                [(voted_against / voter_count) * 100]: 'red',
+                                'rgb(34, 197, 94)':
+                                    (voted_for / voter_count) * 100,
+                                red: (voted_against / voter_count) * 100,
                             }}
                         />
                     </div>

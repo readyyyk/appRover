@@ -96,12 +96,14 @@ const Page: FC<Props> = async ({ params: { pollId } }) => {
                         <Progress
                             className={'bg-gray-700 h-8 mt-8'}
                             value={{
-                                [(pollData.data.voted_for /
-                                    pollData.data.voter_count) *
-                                100]: 'rgb(34, 197, 94)',
-                                [(pollData.data.voted_against /
-                                    pollData.data.voter_count) *
-                                100]: 'red',
+                                'rgb(34, 197, 94)':
+                                    (pollData.data.voted_for /
+                                        pollData.data.voter_count) *
+                                    100,
+                                red:
+                                    (pollData.data.voted_against /
+                                        pollData.data.voter_count) *
+                                    100,
                             }}
                         />
                     </div>
